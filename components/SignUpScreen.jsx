@@ -4,34 +4,63 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
+
 const auth = getAuth();
+
+console.log(getAuth);
 
 const SignUpScreen = ({ navigation }) => {
   const [value, setValue] = React.useState({
     email: "",
     password: "",
+    username:"",
     error: "",
   });
 
-  async function signUp() {
+
+
+  const signUpFunc=(()=>{
     if (value.email === "" || value.password === "") {
       setValue({
         ...value,
         error: "Email and password are mandatory.",
       });
-      return;
-    }
-
-    try {
-      await createUserWithEmailAndPassword(auth, value.email, value.password);
-      navigation.navigate("Sign In");
-    } catch (error) {
+  }
+  createUserWithEmailAndPassword(auth, value.email, value.password)
+  .then((userCredential)=>{
+      navigation.navigate("Sign In")
+       return console.log('result' ,userCredential)
+    })
+    .catch((error)=>{
       setValue({
         ...value,
         error: error.message,
       });
-    }
-  }
+    })
+
+})
+// signUpFunc();
+
+
+  // async function signUp() {
+  //   if (value.email === "" || value.password === "") {
+  //     setValue({
+  //       ...value,
+  //       error: "Email and password are mandatory.",
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     await createUserWithEmailAndPassword(auth, value.email, value.password);
+  //     navigation.navigate("Sign In")
+  //   } catch (error) {
+  //     setValue({
+  //       ...value,
+  //       error: error.message,
+  //     });
+  //   }
+  // }
 
   return (
     <View style={styles.container}>
@@ -44,6 +73,12 @@ const SignUpScreen = ({ navigation }) => {
       )}
 
       <View style={styles.controls}>
+
+        <TextInput placeholder="username" containerStycontainerStyle={styles.control}
+          value={value.username}
+          onChangeText={(text) => setValue({ ...value, email: text })}
+          leftIcon={<Icon name="envelope" size={16} />} />
+
         <TextInput
           placeholder="Email"
           containerStyle={styles.control}
@@ -61,7 +96,7 @@ const SignUpScreen = ({ navigation }) => {
           leftIcon={<Icon name="key" size={16} />}
         />
 
-        <Button title="Sign up" buttonStyle={styles.control} onPress={signUp} />
+        <Button title="Sign up" buttonStyle={styles.control} onPress={signUpFunc} />
       </View>
     </View>
   );

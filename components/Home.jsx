@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const auth = getAuth();
 
   const Drawer = createDrawerNavigator();
-  console.log(user)
+  // console.log(user)
 
   return (
 
